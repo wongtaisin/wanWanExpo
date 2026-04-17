@@ -1,0 +1,254 @@
+{
+  "id": "5039356",
+  "name": "expenses",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "8666822",
+      "name": "店铺",
+      "font_class": "dianpu1",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
+      "icon_id": "12625080",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "19739001",
+      "name": "店铺",
+      "font_class": "dianpu",
+      "unicode": "f19c",
+      "unicode_decimal": 61852
+    },
+    {
+      "icon_id": "39945778",
+      "name": "统计图表",
+      "font_class": "tongjitubiao",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "44538088",
+      "name": "图表统计",
+      "font_class": "tubiaotongji",
+      "unicode": "e682",
+      "unicode_decimal": 59010
+    },
+    {
+      "icon_id": "7064960",
+      "name": "明细",
+      "font_class": "mingxi",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "24732627",
+      "name": "我的",
+      "font_class": "wode",
+      "unicode": "ecb4",
+      "unicode_decimal": 60596
+    },
+    {
+      "icon_id": "3473218",
+      "name": "米饭",
+      "font_class": "mifan",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "16251698",
+      "name": "food-米饭",
+      "font_class": "food-mifan",
+      "unicode": "e858",
+      "unicode_decimal": 59480
+    },
+    {
+      "icon_id": "39538347",
+      "name": "黄焖鸡米饭",
+      "font_class": "huangmenjimifan",
+      "unicode": "101a0",
+      "unicode_decimal": 65952
+    },
+    {
+      "icon_id": "5221808",
+      "name": "筷子",
+      "font_class": "icon-test",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "36917772",
+      "name": "停车费用",
+      "font_class": "tingchefeiyong",
+      "unicode": "e6e1",
+      "unicode_decimal": 59105
+    },
+    {
+      "icon_id": "18527367",
+      "name": "加油站",
+      "font_class": "jiayouzhanxinxi",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "42087790",
+      "name": "加油站",
+      "font_class": "jiayouzhan2",
+      "unicode": "e73c",
+      "unicode_decimal": 59196
+    },
+    {
+      "icon_id": "31133295",
+      "name": "其它费用",
+      "font_class": "qitafeiyong",
+      "unicode": "e859",
+      "unicode_decimal": 59481
+    },
+    {
+      "icon_id": "35269634",
+      "name": "周边娱乐",
+      "font_class": "zhoubianyule",
+      "unicode": "e776",
+      "unicode_decimal": 59254
+    },
+    {
+      "icon_id": "2386464",
+      "name": "电话",
+      "font_class": "dianhua",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "1239941",
+      "name": "公交车",
+      "font_class": "gongjiaoche",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "2817228",
+      "name": "过路费",
+      "font_class": "guolufei",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "19538727",
+      "name": "手柄",
+      "font_class": "shoubing",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
+      "icon_id": "45972428",
+      "name": "Game Pad游戏手柄",
+      "font_class": "a-GamePadyouxishoubing",
+      "unicode": "e7ad",
+      "unicode_decimal": 59309
+    },
+    {
+      "icon_id": "5008984",
+      "name": "001-online-shop",
+      "font_class": "-online-shop",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "9594346",
+      "name": "网购",
+      "font_class": "wanggou",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "26850959",
+      "name": "超市",
+      "font_class": "chaoshi2",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "14055528",
+      "name": "vip",
+      "font_class": "vip1",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "40234308",
+      "name": "vipSolid01",
+      "font_class": "vipSolid01",
+      "unicode": "e6f2",
+      "unicode_decimal": 59122
+    },
+    {
+      "icon_id": "42320225",
+      "name": "VIP",
+      "font_class": "VIP",
+      "unicode": "e6be",
+      "unicode_decimal": 59070
+    },
+    {
+      "icon_id": "35617508",
+      "name": "红包",
+      "font_class": "hongbao1",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "41577848",
+      "name": "红包",
+      "font_class": "hongbao2",
+      "unicode": "e6b2",
+      "unicode_decimal": 59058
+    },
+    {
+      "icon_id": "22733028",
+      "name": "11-加油费",
+      "font_class": "a-11-jiayoufei",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "2800307",
+      "name": "吃饭",
+      "font_class": "chifan",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "5732989",
+      "name": "玩具、运动、球、篮球",
+      "font_class": "wanju",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "9935208",
+      "name": "喝酒",
+      "font_class": "hejiu",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "12037509",
+      "name": "娱乐",
+      "font_class": "yule",
+      "unicode": "e76e",
+      "unicode_decimal": 59246
+    },
+    {
+      "icon_id": "26048515",
+      "name": "可口可乐",
+      "font_class": "kekoukele2",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    }
+  ]
+}
