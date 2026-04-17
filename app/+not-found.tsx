@@ -6,12 +6,12 @@ import { Text, View } from '@/components/Themed'
 export default function NotFoundScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: '糟糕!' }} />
+      <Stack.Screen options={{ title: '404!' }} />
       <View style={styles.container}>
-        <Text style={styles.title}>此屏幕不存在</Text>
+        <Text style={styles.title}>此页面不存在</Text>
 
         <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>返回主屏幕！</Text>
+          <Text style={styles.linkText}>返回首页！</Text>
         </Link>
       </View>
     </>

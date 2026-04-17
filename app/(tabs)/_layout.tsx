@@ -24,7 +24,21 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true)
+        headerShown: useClientOnlyValue(true, true), // 在web端禁用静态渲染头部
+        // 设置头部样式
+        headerStyle: {
+          backgroundColor: '#fede2b'
+        },
+        headerTintColor: '#000', // 设置头部文字颜色
+        // 设置底部标签栏样式
+        tabBarStyle: {
+          backgroundColor: '#fff',
+          height: 58
+        },
+        // 设置底部标签栏文字样式
+        tabBarLabelStyle: {
+          fontSize: 14
+        }
       }}
     >
       <Tabs.Screen
