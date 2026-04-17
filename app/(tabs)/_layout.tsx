@@ -33,11 +33,12 @@ export default function TabLayout() {
         // 设置底部标签栏样式
         tabBarStyle: {
           backgroundColor: '#fff',
-          height: 58
+          height: 52
         },
         // 设置底部标签栏文字样式
         tabBarLabelStyle: {
-          fontSize: 14
+          fontSize: 12,
+          marginTop: 1
         }
       }}
     >

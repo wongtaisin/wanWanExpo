@@ -1,14 +1,3 @@
-/*
- * @Author: wingddd wongtaisin1024@gmail.com
- * @Date: 2026-01-28 10:35:28
- * @LastEditors: wingddd wongtaisin1024@gmail.com
- * @LastEditTime: 2026-04-14 18:12:15
- * @FilePath: \wanWanRN\src\pages\Home\index.tsx
- * @Description:
- *
- * Copyright (c) 2026 by wongtaisin1024@gmail.com, All Rights Reserved.
- */
-
 import IconFont from '@/components/IconFont'
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 
