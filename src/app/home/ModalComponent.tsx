@@ -123,6 +123,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
                   selectedValue={paymentId}
                   onValueChange={itemValue => handlePaymentSelect(itemValue as number)}
                   style={styles.picker}
+                  itemStyle={{ color: '#000', fontSize: 16 }}
                 >
                   {paymentOptions.map(item => (
                     <Picker.Item key={item.id} label={item.name} value={item.id} />
@@ -134,7 +135,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
             <View style={styles.inputContainer}>
               <Text style={{ width: 80 }}>备注</Text>
               <TextInput
-                style={styles.input}
+                style={styles.remark}
                 placeholder="在此输入备注"
                 placeholderTextColor="#999"
                 multiline={true} // 允许多行输入
@@ -189,11 +190,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)' // 关键：半透明黑色
+    backgroundColor: 'rgba(0, 0, 0, 0.7)' // 关键：半透明黑色
   },
 
   // 3. 弹窗实体内容
   modalView: {
+    width: 370,
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -212,10 +214,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   submitBtn: {
-    width: 350,
+    width: 320,
     marginTop: 10,
     backgroundColor: '#2196F3',
-    padding: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
     borderRadius: 5
   },
   textStyle: {
@@ -223,7 +226,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center'
   },
-
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -231,24 +233,33 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   input: {
-    width: 240,
-    // height: 36,
-    padding: 6,
+    width: 220,
+    height: 42,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10 // 内边距，增加输入体验
+  },
+  remark: {
+    width: 220,
+    height: 80,
+    textAlignVertical: 'top',
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10
   },
   pickerContainer: {
-    width: 240,
+    width: 220,
+    height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
-    overflow: 'hidden'
+    paddingHorizontal: 10
   },
   picker: {
     width: '100%',
-    height: 40
+    height: 56
   }
 })
 
