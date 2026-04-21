@@ -44,7 +44,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>我是弹窗内容</Text>
 
-            <View style={styles.inputContainer}>
+            <View className="flex-row justify-between items-center px-4 py-3">
               <Text style={{ width: 80 }}>支出类型</Text>
               <TextInput
                 style={styles.input}
