@@ -124,8 +124,8 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
                   onValueChange={itemValue => handlePaymentSelect(itemValue as number)}
                   style={styles.picker}
                 >
-                  {paymentOptions.map(option => (
-                    <Picker.Item key={option.id} label={option.name} value={option.id} />
+                  {paymentOptions.map(item => (
+                    <Picker.Item key={item.id} label={item.name} value={item.id} />
                   ))}
                 </Picker>
               </View>
