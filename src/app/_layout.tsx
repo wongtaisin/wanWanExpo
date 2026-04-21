@@ -1,3 +1,13 @@
+/*
+ * @Author: wingddd wongtaisin1024@gmail.com
+ * @Date: 2026-04-17 10:48:50
+ * @LastEditors: wingddd wongtaisin1024@gmail.com
+ * @LastEditTime: 2026-04-21 09:39:36
+ * @FilePath: \wanWanExpo\src\app\_layout.tsx
+ * @Description:
+ *
+ * Copyright (c) 2026 by wongtaisin1024@gmail.com, All Rights Reserved.
+ */
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'

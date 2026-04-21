@@ -1,5 +1,7 @@
 import IconFont from '@/components/IconFont'
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { useState } from 'react'
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
+import ModalComponent from '../home/ModalComponent'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -31,27 +33,36 @@ const tableData = [
 ]
 
 const Home = () => {
+  const [modalVisible, setModalVisible] = useState(false)
+
   return (
     <>
       <View style={styles.container}>
         <View style={styles.flexContainer}>
           {tableData.map((item, i) => (
-            <View
+            <Pressable
               key={i}
               style={[
                 styles.item,
                 // 每行第 4 个（index 从 0 开始）
                 (i + 1) % 4 === 0 && styles.itemNoMargin
               ]}
+              onPress={() => {
+                console.log(item.prop, item.label)
+                setModalVisible(true)
+              }}
             >
               <>
                 <IconFont name={item.icon as any} size={28} color="#000" />
                 <Text style={styles.itemText}>{item.label}</Text>
               </>
-            </View>
+            </Pressable>
           ))}
         </View>
       </View>
+
+      {/* 弹窗组件 */}
+      <ModalComponent visible={modalVisible} onClose={() => setModalVisible(false)} />
     </>
   )
 }
