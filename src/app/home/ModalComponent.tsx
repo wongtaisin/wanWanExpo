@@ -1,3 +1,4 @@
+import { Picker } from '@react-native-picker/picker'
 import { useState } from 'react'
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
@@ -18,9 +19,46 @@ interface FormData {
 const MyModal = ({ visible, onClose }: ModalComponentProps) => {
   const [expensesName, setExpensesName] = useState('')
   const [money, setMoney] = useState('')
-  const [paymentId, setPaymentId] = useState('')
+  const [paymentId, setPaymentId] = useState<number>(2) // 默认选中微信
+  const [paymentName, setPaymentName] = useState('')
   const [shopName, setShopName] = useState('')
   const [remark, setRemark] = useState('')
+
+  // 支付类型选项
+  const paymentOptions = [
+    { id: 1, name: '现金' },
+    { id: 2, name: '微信' },
+    { id: 3, name: '支付宝' },
+    { id: 4, name: '信用卡' },
+    { id: 5, name: '储蓄卡' },
+    { id: 6, name: '抖音' }
+  ]
+
+  // 处理支付类型选择
+  const handlePaymentSelect = (id: number) => {
+    setPaymentId(id)
+    const selectedOption = paymentOptions.find(item => item.id === Number(id))
+    if (selectedOption) {
+      setPaymentName(selectedOption.name)
+    }
+  }
+
+  const handleMoneyChange = (val: string) => {
+    // 1. 正则替换：保留数字和小数点，确保只有一个小数点
+    console.log('原始输入：', val)
+    // 首先移除所有非数字和非小数点字符
+    let cleaned = val.replace(/[^0-9.]/g, '')
+    // 确保只有一个小数点
+    const parts = cleaned.split('.')
+    if (parts.length > 2) {
+      cleaned = parts[0] + '.' + parts.slice(1).join('')
+    }
+    // 确保小数点不在开头
+    if (cleaned.startsWith('.')) {
+      cleaned = '0' + cleaned
+    }
+    setMoney(cleaned)
+  }
 
   return (
     <View style={styles.centeredView}>
@@ -29,7 +67,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
         animationType="fade" // 淡入淡出效果更自然
         transparent={true} // 必须为 true
         visible={visible}
-        onRequestClose={onClose} // 安卓返回键处理
+        onRequestClose={() => onClose()} // 安卓返回键处理
       >
         {/* --- 核心部分：遮罩层容器 --- */}
         <View style={styles.overlay}>
@@ -44,7 +82,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>我是弹窗内容</Text>
 
-            <View className="flex-row justify-between items-center px-4 py-3">
+            <View className="flex-row justify-between items-center gap-2 mb-4">
               <Text style={{ width: 80 }}>支出类型</Text>
               <TextInput
                 style={styles.input}
@@ -55,18 +93,19 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
               />
             </View>
 
-            <View style={styles.inputContainer}>
+            <View className="flex-row justify-between items-center gap-2 mb-4">
               <Text style={{ width: 80 }}>金额</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入金额"
                 placeholderTextColor="#999"
+                inputMode="numeric" // 移动端唤起数字键盘
                 value={money}
-                onChangeText={setMoney} // 当文本变化时更新 state
+                onChangeText={handleMoneyChange} // 当文本变化时更新 state
               />
             </View>
 
-            <View style={styles.inputContainer}>
+            <View className="flex-row justify-between items-center gap-2 mb-4">
               <Text style={{ width: 80 }}>店铺名称</Text>
               <TextInput
                 style={styles.input}
@@ -77,15 +116,19 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
               />
             </View>
 
-            <View style={styles.inputContainer}>
+            <View className="flex-row justify-between items-center gap-2 mb-4">
               <Text style={{ width: 80 }}>支付类型</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="在此输入类型"
-                placeholderTextColor="#999"
-                value={paymentId}
-                onChangeText={setPaymentId} // 当文本变化时更新 state
-              />
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={paymentId}
+                  onValueChange={itemValue => handlePaymentSelect(itemValue as number)}
+                  style={styles.picker}
+                >
+                  {paymentOptions.map(option => (
+                    <Picker.Item key={option.id} label={option.name} value={option.id} />
+                  ))}
+                </Picker>
+              </View>
             </View>
 
             <View style={styles.inputContainer}>
@@ -95,14 +138,27 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
                 placeholder="在此输入备注"
                 placeholderTextColor="#999"
                 multiline={true} // 允许多行输入
-                numberOfLines={4} // 显示 4 行
+                numberOfLines={3} // 显示 3 行
                 value={remark}
                 onChangeText={setRemark} // 当文本变化时更新 state
               />
             </View>
 
-            <TouchableOpacity style={styles.closeBtn} onPress={() => onClose()}>
-              <Text style={styles.textStyle}>关闭弹窗</Text>
+            <TouchableOpacity
+              style={styles.submitBtn}
+              onPress={() => {
+                console.log(
+                  '提交的数据：',
+                  expensesName,
+                  money,
+                  shopName,
+                  paymentId,
+                  paymentName,
+                  remark
+                )
+              }}
+            >
+              <Text style={styles.textStyle}>提交</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -141,7 +197,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 35,
+    padding: 30,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -155,7 +211,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold'
   },
-  closeBtn: {
+  submitBtn: {
+    width: 350,
     marginTop: 10,
     backgroundColor: '#2196F3',
     padding: 10,
@@ -181,6 +238,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10
+  },
+  pickerContainer: {
+    width: 240,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    overflow: 'hidden'
+  },
+  picker: {
+    width: '100%',
+    height: 40
   }
 })
 
