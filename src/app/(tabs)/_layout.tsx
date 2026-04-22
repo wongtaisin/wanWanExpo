@@ -1,11 +1,20 @@
+/*
+ * @Author: wingddd wongtaisin1024@gmail.com
+ * @Date: 2026-04-17 10:07:04
+ * @LastEditors: wingddd wongtaisin1024@gmail.com
+ * @LastEditTime: 2026-04-22 08:13:56
+ * @FilePath: \wanWanExpo\src\app\(tabs)\_layout.tsx
+ * @Description:
+ *
+ * Copyright (c) 2026 by wongtaisin1024@gmail.com, All Rights Reserved.
+ */
+import { useClientOnlyValue } from '@/components/useClientOnlyValue'
+import { useColorScheme } from '@/components/useColorScheme'
+import Colors from '@/constants/Colors'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Link, Tabs } from 'expo-router'
 import React from 'react'
 import { Pressable } from 'react-native'
-
-import { useClientOnlyValue } from '@/components/useClientOnlyValue'
-import { useColorScheme } from '@/components/useColorScheme'
-import Colors from '@/constants/Colors'
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -65,21 +74,21 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="expense"
         options={{
           title: '流水',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />
+          tabBarIcon: ({ color }) => <TabBarIcon name="money" color={color} />
         }}
       />
       <Tabs.Screen
-        name="three"
+        name="chart"
         options={{
           title: '图表',
           tabBarIcon: ({ color }) => <TabBarIcon name="bar-chart" color={color} />
         }}
       />
       <Tabs.Screen
-        name="four"
+        name="user"
         options={{
           title: '我的',
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />

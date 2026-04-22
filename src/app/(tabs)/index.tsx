@@ -1,7 +1,7 @@
+import ModalComponent from '@/app/home/ModalComponent'
 import IconFont from '@/components/IconFont'
 import { useState } from 'react'
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
-import ModalComponent from '../home/ModalComponent'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 

@@ -1,14 +1,13 @@
-import { StyleSheet } from 'react-native'
-
 import EditScreenInfo from '@/components/EditScreenInfo'
 import { Text, View } from '@/components/Themed'
+import { StyleSheet } from 'react-native'
 
-export default function TabTwoScreen() {
+export default function TabChartScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>我的</Text>
+      <Text style={styles.title}>图表</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/four.tsx" />
+      <EditScreenInfo path="app/(tabs)/chart.tsx" />
     </View>
   )
 }
