@@ -1,6 +1,8 @@
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { Picker } from '@react-native-picker/picker'
 import { useState } from 'react'
-import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import _util from '../../utils/utils'
 
 interface ModalComponentProps {
   visible: boolean
@@ -60,6 +62,35 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
     setMoney(cleaned)
   }
 
+  const [createDate, setCreateDate] = useState(new Date())
+  const [showDate, setShowDate] = useState(false)
+
+  const handleDateChange = (event: any, selectedDate: any) => {
+    setShowDate(false) // 隐藏日期选择器
+    setShowDate(Platform.OS === 'ios') // iOS 上保持显示，Android 上自动隐藏
+    if (event.type === 'set' && selectedDate) {
+      setCreateDate(selectedDate)
+      setShowTime(true) // 显示时间选择器
+    }
+  }
+
+  const [showTime, setShowTime] = useState(false)
+
+  const handleTimeChange = (event: any, selectedTime: any) => {
+    setShowTime(false) // 隐藏时间选择器
+    if (event.type === 'set' && selectedTime) {
+      // 合并日期和时间
+      const finalDate = new Date(
+        createDate.getFullYear(),
+        createDate.getMonth(),
+        createDate.getDate(),
+        selectedTime.getHours(),
+        selectedTime.getMinutes()
+      )
+      setCreateDate(finalDate)
+    }
+  }
+
   return (
     <View style={styles.centeredView}>
       {/* Modal 组件 */}
@@ -83,7 +114,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
             <Text style={styles.modalText}>我是弹窗内容</Text>
 
             <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 80 }}>支出类型</Text>
+              <Text style={{ width: 60 }}>支出类型</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入类型"
@@ -94,7 +125,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
             </View>
 
             <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 80 }}>金额</Text>
+              <Text style={{ width: 60 }}>金额</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入金额"
@@ -106,7 +137,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
             </View>
 
             <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 80 }}>店铺名称</Text>
+              <Text style={{ width: 60 }}>店铺名称</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入店铺"
@@ -117,7 +148,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
             </View>
 
             <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 80 }}>支付类型</Text>
+              <Text style={{ width: 60 }}>支付类型</Text>
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={paymentId}
@@ -133,7 +164,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={{ width: 80 }}>备注</Text>
+              <Text style={{ width: 60 }}>备注</Text>
               <TextInput
                 style={styles.remark}
                 placeholder="在此输入备注"
@@ -143,6 +174,35 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
                 value={remark}
                 onChangeText={setRemark} // 当文本变化时更新 state
               />
+            </View>
+
+            <View className="flex-row justify-between items-center gap-2 mb-4">
+              <Text style={{ width: 60 }}>创建时间</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="请选择日期"
+                placeholderTextColor="#999"
+                value={_util.formatDateTime(createDate, true) || ''}
+                onPress={() => setShowDate(true)}
+              />
+
+              {showDate && (
+                <DateTimePicker
+                  value={createDate}
+                  mode="date" // 日期时间模式
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'} // iOS 推荐用 spinner，Android 用 default (弹窗)
+                  onChange={handleDateChange}
+                />
+              )}
+
+              {showTime && (
+                <DateTimePicker
+                  value={createDate}
+                  mode="time" // Android 上使用 time 模式
+                  display="default"
+                  onChange={handleTimeChange}
+                />
+              )}
             </View>
 
             <TouchableOpacity
@@ -214,8 +274,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   submitBtn: {
-    width: 320,
-    marginTop: 10,
+    width: 310,
     backgroundColor: '#2196F3',
     paddingTop: 10,
     paddingBottom: 10,
@@ -233,7 +292,7 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   input: {
-    width: 220,
+    width: 240,
     height: 42,
     borderColor: '#ccc',
     borderWidth: 1,
@@ -241,7 +300,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10 // 内边距，增加输入体验
   },
   remark: {
-    width: 220,
+    width: 240,
     height: 80,
     textAlignVertical: 'top',
     borderColor: '#ccc',
@@ -250,7 +309,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
   pickerContainer: {
-    width: 220,
+    width: 240,
     height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
