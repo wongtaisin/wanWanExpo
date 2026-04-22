@@ -7,6 +7,7 @@ import _util from '../../utils/utils'
 interface ModalComponentProps {
   visible: boolean
   onClose: () => void
+  title: string
 }
 
 interface FormData {
@@ -18,13 +19,16 @@ interface FormData {
   [key: string]: string | number | Record<string, any>[] | undefined | null | any
 }
 
-const MyModal = ({ visible, onClose }: ModalComponentProps) => {
-  const [expensesName, setExpensesName] = useState('')
-  const [money, setMoney] = useState('')
+const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
+  const [expensesName, setExpensesName] = useState('') // 支出名称
+  const [money, setMoney] = useState('') // 金额
   const [paymentId, setPaymentId] = useState<number>(2) // 默认选中微信
-  const [paymentName, setPaymentName] = useState('')
-  const [shopName, setShopName] = useState('')
-  const [remark, setRemark] = useState('')
+  const [paymentName, setPaymentName] = useState('') // 支付类型名称
+  const [shopName, setShopName] = useState('') // 店铺名称
+  const [remark, setRemark] = useState('') // 备注
+  const [createDate, setCreateDate] = useState(new Date()) // 创建日期
+  const [showDate, setShowDate] = useState(false) // 显示日期选择器
+  const [showTime, setShowTime] = useState(false) // 显示时间选择器
 
   // 支付类型选项
   const paymentOptions = [
@@ -45,6 +49,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
     }
   }
 
+  // 处理金额输入变化
   const handleMoneyChange = (val: string) => {
     // 1. 正则替换：保留数字和小数点，确保只有一个小数点
     console.log('原始输入：', val)
@@ -62,9 +67,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
     setMoney(cleaned)
   }
 
-  const [createDate, setCreateDate] = useState(new Date())
-  const [showDate, setShowDate] = useState(false)
-
+  // 处理日期选择变化
   const handleDateChange = (event: any, selectedDate: any) => {
     setShowDate(false) // 隐藏日期选择器
     setShowDate(Platform.OS === 'ios') // iOS 上保持显示，Android 上自动隐藏
@@ -74,8 +77,7 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
     }
   }
 
-  const [showTime, setShowTime] = useState(false)
-
+  // 处理时间选择变化
   const handleTimeChange = (event: any, selectedTime: any) => {
     setShowTime(false) // 隐藏时间选择器
     if (event.type === 'set' && selectedTime) {
@@ -111,10 +113,10 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
 
           {/* --- 弹窗内容 (点击这里不关闭) --- */}
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>我是弹窗内容</Text>
+            <Text style={styles.modalText}>{title || '支出'}</Text>
 
-            <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 60 }}>支出类型</Text>
+            <View className="flex-row justify-between items-center mb-4 w-full">
+              <Text className="w-25">支出类型</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入类型"
@@ -124,8 +126,8 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
               />
             </View>
 
-            <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 60 }}>金额</Text>
+            <View className="flex-row justify-between items-center mb-4 w-full">
+              <Text className="w-25">金额</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入金额"
@@ -136,8 +138,8 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
               />
             </View>
 
-            <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 60 }}>店铺名称</Text>
+            <View className="flex-row justify-between items-center mb-4 w-full">
+              <Text className="w-25">店铺名称</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入店铺"
@@ -147,8 +149,8 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
               />
             </View>
 
-            <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 60 }}>支付类型</Text>
+            <View className="flex-row justify-between items-center mb-4 w-full">
+              <Text className="w-25">支付类型</Text>
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={paymentId}
@@ -163,8 +165,8 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
               </View>
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={{ width: 60 }}>备注</Text>
+            <View className="flex-row justify-between items-center mb-4 w-full">
+              <Text className="w-25">备注</Text>
               <TextInput
                 style={styles.remark}
                 placeholder="在此输入备注"
@@ -176,8 +178,8 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
               />
             </View>
 
-            <View className="flex-row justify-between items-center gap-2 mb-4">
-              <Text style={{ width: 60 }}>创建时间</Text>
+            <View className="flex-row justify-between items-center mb-4 w-full">
+              <Text className="w-25">创建时间</Text>
               <TextInput
                 style={styles.input}
                 placeholder="请选择日期"
@@ -215,7 +217,8 @@ const MyModal = ({ visible, onClose }: ModalComponentProps) => {
                   shopName,
                   paymentId,
                   paymentName,
-                  remark
+                  remark,
+                  _util.formatDateTime(createDate, true)
                 )
               }}
             >
@@ -255,7 +258,7 @@ const styles = StyleSheet.create({
 
   // 3. 弹窗实体内容
   modalView: {
-    width: 370,
+    width: '85%',
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -274,7 +277,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   submitBtn: {
-    width: 310,
+    width: '100%',
     backgroundColor: '#2196F3',
     paddingTop: 10,
     paddingBottom: 10,
@@ -285,22 +288,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center'
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 15
-  },
   input: {
-    width: 240,
-    height: 42,
+    width: '75%',
+    height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10 // 内边距，增加输入体验
   },
   remark: {
-    width: 240,
+    width: '75%',
     height: 80,
     textAlignVertical: 'top',
     borderColor: '#ccc',
@@ -309,7 +306,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
   pickerContainer: {
-    width: 240,
+    width: '75%',
     height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
