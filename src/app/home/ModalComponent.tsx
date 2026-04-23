@@ -15,20 +15,52 @@ interface FormData {
   money: string
   paymentId: number
   paymentName: string
-  createDate: string
+  remark: string
+  createDate: Date
   [key: string]: string | number | Record<string, any>[] | undefined | null | any
 }
 
+const isIOS = Platform.OS === 'ios' // 是否为 iOS
+
 const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
-  const [expensesName, setExpensesName] = useState('') // 支出名称
-  const [money, setMoney] = useState('') // 金额
-  const [paymentId, setPaymentId] = useState<number>(2) // 默认选中微信
-  const [paymentName, setPaymentName] = useState('') // 支付类型名称
-  const [shopName, setShopName] = useState('') // 店铺名称
-  const [remark, setRemark] = useState('') // 备注
-  const [createDate, setCreateDate] = useState(new Date()) // 创建日期
+  const [params, setParams] = useState<FormData>({
+    expensesName: '', // 支出名称
+    money: '', // 金额
+    paymentId: 2, // 默认微信
+    paymentName: '', // 支付类型
+    shopName: '', // 店铺名称
+    remark: '', // 创建日期
+    createDate: new Date() // 格式化默认日期为 YYYY-MM-DD
+  })
+
   const [showDate, setShowDate] = useState(false) // 显示日期选择器
   const [showTime, setShowTime] = useState(false) // 显示时间选择器
+
+  const textInputList = [
+    {
+      label: '支付类型',
+      value: '',
+      placeholder: '在此输入类型',
+      handle: (val: string) => setParams({ ...params, paymentName: val })
+    },
+    {
+      label: '金额',
+      value: '',
+      placeholder: '在此输入金额',
+      handle: (val: string) => handleMoneyChange(val)
+    },
+    {
+      label: '店铺名称',
+      value: '',
+      placeholder: '在此输入店铺名称',
+      handle: (val: string) => setParams({ ...params, shopName: val }),
+      slot: {
+        render: (scope: any) => {
+          console.log(scope)
+        }
+      }
+    }
+  ]
 
   // 支付类型选项
   const paymentOptions = [
@@ -42,10 +74,9 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
 
   // 处理支付类型选择
   const handlePaymentSelect = (id: number) => {
-    setPaymentId(id)
     const selectedOption = paymentOptions.find(item => item.id === Number(id))
     if (selectedOption) {
-      setPaymentName(selectedOption.name)
+      setParams({ ...params, paymentId: id, paymentName: selectedOption.name })
     }
   }
 
@@ -64,15 +95,15 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
     if (cleaned.startsWith('.')) {
       cleaned = '0' + cleaned
     }
-    setMoney(cleaned)
+    setParams({ ...params, money: cleaned })
   }
 
   // 处理日期选择变化
   const handleDateChange = (event: any, selectedDate: any) => {
     setShowDate(false) // 隐藏日期选择器
-    setShowDate(Platform.OS === 'ios') // iOS 上保持显示，Android 上自动隐藏
+    setShowDate(isIOS) // iOS 上保持显示，Android 上自动隐藏
     if (event.type === 'set' && selectedDate) {
-      setCreateDate(selectedDate)
+      setParams({ ...params, createDate: selectedDate })
       setShowTime(true) // 显示时间选择器
     }
   }
@@ -83,18 +114,18 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
     if (event.type === 'set' && selectedTime) {
       // 合并日期和时间
       const finalDate = new Date(
-        createDate.getFullYear(),
-        createDate.getMonth(),
-        createDate.getDate(),
+        params.createDate.getFullYear(),
+        params.createDate.getMonth(),
+        params.createDate.getDate(),
         selectedTime.getHours(),
         selectedTime.getMinutes()
       )
-      setCreateDate(finalDate)
+      setParams({ ...params, createDate: finalDate })
     }
   }
 
   return (
-    <View style={styles.centeredView}>
+    <>
       {/* Modal 组件 */}
       <Modal
         animationType="fade" // 淡入淡出效果更自然
@@ -103,60 +134,68 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
         onRequestClose={() => onClose()} // 安卓返回键处理
       >
         {/* --- 核心部分：遮罩层容器 --- */}
-        <View style={styles.overlay}>
+        <View className="flex-1 justify-center items-center">
           {/* --- 遮罩背景 (点击这里触发关闭) --- */}
           <TouchableOpacity
-            style={styles.backdrop}
-            activeOpacity={1} // 点击时不改变透明度
+            className="w-full h-full absolute top-0 left-0 right-0 bottom-0 bg-black opacity-70"
+            activeOpacity={0.7} // 点击时不改变透明度
             onPress={onClose}
           />
 
           {/* --- 弹窗内容 (点击这里不关闭) --- */}
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{title || '支出'}</Text>
+            <Text className="mb-4 text-xl font-bold text-center">{title || '支出'}</Text>
+
+            {/* {textInputList.map((column: any, index: number) => {
+              return (
+                <View className="flex-row justify-between items-center mb-4 w-full" key={index}>
+                  <Text className="w-3/12">{column.label}</Text>
+                  {column.slot ? column.slot.render() : column.value}
+                </View>
+              )
+            })} */}
 
             <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-25">支出类型</Text>
+              <Text className="w-3/12">支出类型</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入类型"
                 placeholderTextColor="#999"
-                value={expensesName}
-                onChangeText={setExpensesName} // 当文本变化时更新 state
+                value={params.expensesName}
+                onChangeText={val => setParams({ ...params, expensesName: val })} // 当文本变化时更新 state
               />
             </View>
 
             <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-25">金额</Text>
+              <Text className="w-3/12">金额</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入金额"
                 placeholderTextColor="#999"
                 inputMode="numeric" // 移动端唤起数字键盘
-                value={money}
+                value={params.money}
                 onChangeText={handleMoneyChange} // 当文本变化时更新 state
               />
             </View>
 
             <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-25">店铺名称</Text>
+              <Text className="w-3/12">店铺名称</Text>
               <TextInput
                 style={styles.input}
                 placeholder="在此输入店铺"
                 placeholderTextColor="#999"
-                value={shopName}
-                onChangeText={setShopName} // 当文本变化时更新 state
+                value={params.shopName}
+                onChangeText={val => setParams({ ...params, shopName: val })} // 当文本变化时更新 state
               />
             </View>
 
             <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-25">支付类型</Text>
-              <View style={styles.pickerContainer}>
+              <Text className="w-3/12">支付类型</Text>
+              <View className="w-9/12 border border-gray-300 rounded-md">
                 <Picker
-                  selectedValue={paymentId}
-                  onValueChange={itemValue => handlePaymentSelect(itemValue as number)}
-                  style={styles.picker}
-                  itemStyle={{ color: '#000', fontSize: 16 }}
+                  selectedValue={params.paymentId}
+                  onValueChange={val => handlePaymentSelect(val as number)}
+                  itemStyle={{ color: '#000', fontSize: 14 }}
                 >
                   {paymentOptions.map(item => (
                     <Picker.Item key={item.id} label={item.name} value={item.id} />
@@ -166,40 +205,41 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
             </View>
 
             <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-25">备注</Text>
+              <Text className="w-3/12">备注</Text>
               <TextInput
-                style={styles.remark}
+                style={{ textAlignVertical: 'top' }}
+                className="w-9/12 h-20 border border-gray-300 rounded-md px-2"
                 placeholder="在此输入备注"
                 placeholderTextColor="#999"
                 multiline={true} // 允许多行输入
                 numberOfLines={3} // 显示 3 行
-                value={remark}
-                onChangeText={setRemark} // 当文本变化时更新 state
+                value={params.remark}
+                onChangeText={val => setParams({ ...params, remark: val })} // 当文本变化时更新 state
               />
             </View>
 
             <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-25">创建时间</Text>
+              <Text className="w-3/12">创建时间</Text>
               <TextInput
                 style={styles.input}
                 placeholder="请选择日期"
                 placeholderTextColor="#999"
-                value={_util.formatDateTime(createDate, true) || ''}
+                value={_util.formatDateTime(params.createDate, true) || ''}
                 onPress={() => setShowDate(true)}
               />
 
               {showDate && (
                 <DateTimePicker
-                  value={createDate}
-                  mode="date" // 日期时间模式
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'} // iOS 推荐用 spinner，Android 用 default (弹窗)
+                  value={params.createDate}
+                  mode={isIOS ? 'datetime' : 'date'} // 日期时间模式
+                  display={isIOS ? 'spinner' : 'default'} // iOS 推荐用 spinner，Android 用 default (弹窗)
                   onChange={handleDateChange}
                 />
               )}
 
-              {showTime && (
+              {showTime && !isIOS && (
                 <DateTimePicker
-                  value={createDate}
+                  value={params.createDate}
                   mode="time" // Android 上使用 time 模式
                   display="default"
                   onChange={handleTimeChange}
@@ -208,85 +248,34 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
             </View>
 
             <TouchableOpacity
-              style={styles.submitBtn}
+              className="w-full pt-3 pb-3 bg-blue-500 rounded-md"
               onPress={() => {
-                console.log(
-                  '提交的数据：',
-                  expensesName,
-                  money,
-                  shopName,
-                  paymentId,
-                  paymentName,
-                  remark,
-                  _util.formatDateTime(createDate, true)
-                )
+                console.log('提交的数据：', params, _util.formatDateTime(params.createDate, true))
               }}
             >
-              <Text style={styles.textStyle}>提交</Text>
+              <Text className="text-white text-center">提交</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    </View>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22
-  },
-
-  // 1. 外层容器：全屏，居中
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-
-  // 2. 遮罩背景：绝对定位铺满全屏，半透明黑色
-  backdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)' // 关键：半透明黑色
-  },
-
   // 3. 弹窗实体内容
   modalView: {
     width: '85%',
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 30,
+    padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5 // Android 阴影
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  submitBtn: {
-    width: '100%',
-    backgroundColor: '#2196F3',
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderRadius: 5
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center'
   },
   input: {
     width: '75%',
@@ -295,27 +284,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10 // 内边距，增加输入体验
-  },
-  remark: {
-    width: '75%',
-    height: 80,
-    textAlignVertical: 'top',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10
-  },
-  pickerContainer: {
-    width: '75%',
-    height: 56,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10
-  },
-  picker: {
-    width: '100%',
-    height: 56
   }
 })
 
