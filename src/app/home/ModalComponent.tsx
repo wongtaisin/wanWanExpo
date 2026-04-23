@@ -36,27 +36,92 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
   const [showDate, setShowDate] = useState(false) // 显示日期选择器
   const [showTime, setShowTime] = useState(false) // 显示时间选择器
 
-  const textInputList = [
-    {
-      label: '支付类型',
-      value: '',
-      placeholder: '在此输入类型',
-      handle: (val: string) => setParams({ ...params, paymentName: val })
-    },
+  const formColumns = [
+    { label: '支付类型', prop: 'expensesName' },
     {
       label: '金额',
-      value: '',
+      prop: 'money',
       placeholder: '在此输入金额',
       handle: (val: string) => handleMoneyChange(val)
     },
     {
-      label: '店铺名称',
-      value: '',
-      placeholder: '在此输入店铺名称',
-      handle: (val: string) => setParams({ ...params, shopName: val }),
+      label: '支付类型',
+      prop: 'paymentName',
+      placeholder: '在此输入支付类型',
       slot: {
-        render: (scope: any) => {
-          console.log(scope)
+        render: (scope: FormData) => {
+          return (
+            <View className="w-9/12 border border-gray-300 rounded-md">
+              <Picker
+                selectedValue={scope.paymentId}
+                onValueChange={val => handlePaymentSelect(val as number)}
+                itemStyle={{ color: '#000', fontSize: 14 }}
+              >
+                {paymentOptions.map(item => (
+                  <Picker.Item key={item.id} label={item.name} value={item.id} />
+                ))}
+              </Picker>
+            </View>
+          )
+        }
+      }
+    },
+    { label: '店铺名称', prop: 'shopName' },
+    {
+      label: '备注',
+      prop: 'remark',
+      slot: {
+        render: (scope: FormData) => {
+          return (
+            <TextInput
+              style={{ textAlignVertical: 'top' }}
+              className="w-9/12 h-20 border border-gray-300 rounded-md px-2"
+              placeholder="在此输入备注"
+              placeholderTextColor="#999"
+              multiline={true} // 允许多行输入
+              numberOfLines={3} // 显示 3 行
+              value={scope.remark}
+              onChangeText={val => setParams({ ...scope, remark: val })} // 当文本变化时更新 state
+            />
+          )
+        }
+      }
+    },
+    {
+      label: '创建时间',
+      prop: 'createDate',
+      placeholder: '在此输入创建时间',
+      slot: {
+        render: (scope: FormData) => {
+          return (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="请选择日期"
+                placeholderTextColor="#999"
+                value={_util.formatDateTime(scope.createDate, true)}
+                onPress={() => setShowDate(true)}
+              />
+
+              {showDate && (
+                <DateTimePicker
+                  value={scope.createDate}
+                  mode={isIOS ? 'datetime' : 'date'} // 日期时间模式
+                  display={isIOS ? 'spinner' : 'default'} // iOS 推荐用 spinner，Android 用 default (弹窗)
+                  onChange={handleDateChange}
+                />
+              )}
+
+              {showTime && !isIOS && (
+                <DateTimePicker
+                  value={scope.createDate}
+                  mode="time" // Android 上使用 time 模式
+                  display="default"
+                  onChange={handleTimeChange}
+                />
+              )}
+            </>
+          )
         }
       }
     }
@@ -146,106 +211,27 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
           <View style={styles.modalView}>
             <Text className="mb-4 text-xl font-bold text-center">{title || '支出'}</Text>
 
-            {/* {textInputList.map((column: any, index: number) => {
+            {formColumns.map((column: any, index: number) => {
               return (
                 <View className="flex-row justify-between items-center mb-4 w-full" key={index}>
                   <Text className="w-3/12">{column.label}</Text>
-                  {column.slot ? column.slot.render() : column.value}
+                  {column.slot ? (
+                    column.slot.render(params)
+                  ) : (
+                    <TextInput
+                      style={styles.input}
+                      placeholder={column.placeholder || `在此输入${column.label}`}
+                      placeholderTextColor="#999"
+                      value={params[column.prop] || ''}
+                      onChangeText={
+                        column.handle ||
+                        ((val: string) => setParams({ ...params, [column.prop]: val }))
+                      } // 当文本变化时更新 state
+                    />
+                  )}
                 </View>
               )
-            })} */}
-
-            <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-3/12">支出类型</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="在此输入类型"
-                placeholderTextColor="#999"
-                value={params.expensesName}
-                onChangeText={val => setParams({ ...params, expensesName: val })} // 当文本变化时更新 state
-              />
-            </View>
-
-            <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-3/12">金额</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="在此输入金额"
-                placeholderTextColor="#999"
-                inputMode="numeric" // 移动端唤起数字键盘
-                value={params.money}
-                onChangeText={handleMoneyChange} // 当文本变化时更新 state
-              />
-            </View>
-
-            <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-3/12">店铺名称</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="在此输入店铺"
-                placeholderTextColor="#999"
-                value={params.shopName}
-                onChangeText={val => setParams({ ...params, shopName: val })} // 当文本变化时更新 state
-              />
-            </View>
-
-            <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-3/12">支付类型</Text>
-              <View className="w-9/12 border border-gray-300 rounded-md">
-                <Picker
-                  selectedValue={params.paymentId}
-                  onValueChange={val => handlePaymentSelect(val as number)}
-                  itemStyle={{ color: '#000', fontSize: 14 }}
-                >
-                  {paymentOptions.map(item => (
-                    <Picker.Item key={item.id} label={item.name} value={item.id} />
-                  ))}
-                </Picker>
-              </View>
-            </View>
-
-            <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-3/12">备注</Text>
-              <TextInput
-                style={{ textAlignVertical: 'top' }}
-                className="w-9/12 h-20 border border-gray-300 rounded-md px-2"
-                placeholder="在此输入备注"
-                placeholderTextColor="#999"
-                multiline={true} // 允许多行输入
-                numberOfLines={3} // 显示 3 行
-                value={params.remark}
-                onChangeText={val => setParams({ ...params, remark: val })} // 当文本变化时更新 state
-              />
-            </View>
-
-            <View className="flex-row justify-between items-center mb-4 w-full">
-              <Text className="w-3/12">创建时间</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="请选择日期"
-                placeholderTextColor="#999"
-                value={_util.formatDateTime(params.createDate, true) || ''}
-                onPress={() => setShowDate(true)}
-              />
-
-              {showDate && (
-                <DateTimePicker
-                  value={params.createDate}
-                  mode={isIOS ? 'datetime' : 'date'} // 日期时间模式
-                  display={isIOS ? 'spinner' : 'default'} // iOS 推荐用 spinner，Android 用 default (弹窗)
-                  onChange={handleDateChange}
-                />
-              )}
-
-              {showTime && !isIOS && (
-                <DateTimePicker
-                  value={params.createDate}
-                  mode="time" // Android 上使用 time 模式
-                  display="default"
-                  onChange={handleTimeChange}
-                />
-              )}
-            </View>
+            })}
 
             <TouchableOpacity
               className="w-full pt-3 pb-3 bg-blue-500 rounded-md"
