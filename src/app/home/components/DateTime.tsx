@@ -2,7 +2,7 @@
  * @Author: wingddd wongtaisin1024@gmail.com
  * @Date: 2026-04-23 09:30:12
  * @LastEditors: wingddd wongtaisin1024@gmail.com
- * @LastEditTime: 2026-04-23 09:38:30
+ * @LastEditTime: 2026-04-23 17:47:51
  * @FilePath: \wanWanExpo\src\app\home\components\DateTime.tsx
  * @Description:
  *
@@ -10,27 +10,16 @@
  */
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useState } from 'react'
-import { Platform, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Platform, StyleSheet, TextInput } from 'react-native'
 import _util from '../../../utils/utils'
 
-interface ModalComponentProps {
-  visible: boolean
-  onClose: () => void
-  title: string
-}
-
-interface FormData {
-  expensesName: string
-  money: string
-  paymentId: number
-  paymentName: string
-  createDate: string
-  [key: string]: string | number | Record<string, any>[] | undefined | null | any
+interface DateTimeProps {
+  onDataSend: (date: string) => void
 }
 
 const isIOS = Platform.OS === 'ios' // 是否为 iOS
 
-const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
+const DateTime = ({ onDataSend }: DateTimeProps) => {
   const [createDate, setCreateDate] = useState(new Date()) // 创建日期
   const [showDate, setShowDate] = useState(false) // 显示日期选择器
   const [showTime, setShowTime] = useState(false) // 显示时间选择器
@@ -58,17 +47,17 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
         selectedTime.getMinutes()
       )
       setCreateDate(finalDate)
+      onDataSend(_util.formatDateTime(finalDate, true))
     }
   }
 
   return (
-    <View className="flex-row justify-between items-center mb-4 w-full">
-      <Text className="w-3/12">创建时间</Text>
+    <>
       <TextInput
-        className="w-9/12 h-10 border border-gray-300 rounded-md px-2"
+        style={styles.input}
         placeholder="请选择日期"
         placeholderTextColor="#999"
-        value={_util.formatDateTime(createDate, true) || ''}
+        value={_util.formatDateTime(createDate, true)}
         onPress={() => setShowDate(true)}
       />
 
@@ -89,7 +78,7 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
           onChange={handleTimeChange}
         />
       )}
-    </View>
+    </>
   )
 }
 
@@ -104,4 +93,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default MyModal
+export default DateTime

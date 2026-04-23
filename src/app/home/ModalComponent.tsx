@@ -1,8 +1,8 @@
-import DateTimePicker from '@react-native-community/datetimepicker'
 import { Picker } from '@react-native-picker/picker'
 import { useState } from 'react'
-import { Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import _util from '../../utils/utils'
+import DateTimes from './components/DateTime'
 
 interface ModalComponentProps {
   visible: boolean
@@ -16,11 +16,9 @@ interface FormData {
   paymentId: number
   paymentName: string
   remark: string
-  createDate: Date
+  createDate: string
   [key: string]: string | number | Record<string, any>[] | undefined | null | any
 }
-
-const isIOS = Platform.OS === 'ios' // 是否为 iOS
 
 const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
   const [params, setParams] = useState<FormData>({
@@ -30,24 +28,20 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
     paymentName: '', // 支付类型
     shopName: '', // 店铺名称
     remark: '', // 创建日期
-    createDate: new Date() // 格式化默认日期为 YYYY-MM-DD
+    createDate: _util.formatDateTime(new Date(), true) // 格式化默认日期为 YYYY-MM-DD HH:mm
   })
-
-  const [showDate, setShowDate] = useState(false) // 显示日期选择器
-  const [showTime, setShowTime] = useState(false) // 显示时间选择器
 
   const formColumns = [
     { label: '支付类型', prop: 'expensesName' },
     {
       label: '金额',
       prop: 'money',
-      placeholder: '在此输入金额',
       handle: (val: string) => handleMoneyChange(val)
     },
     {
       label: '支付类型',
       prop: 'paymentName',
-      placeholder: '在此输入支付类型',
+      placeholder: '请选择支付类型',
       slot: {
         render: (scope: FormData) => {
           return (
@@ -90,36 +84,12 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
     {
       label: '创建时间',
       prop: 'createDate',
-      placeholder: '在此输入创建时间',
+      placeholder: '请选择创建时间',
       slot: {
         render: (scope: FormData) => {
           return (
             <>
-              <TextInput
-                style={styles.input}
-                placeholder="请选择日期"
-                placeholderTextColor="#999"
-                value={_util.formatDateTime(scope.createDate, true)}
-                onPress={() => setShowDate(true)}
-              />
-
-              {showDate && (
-                <DateTimePicker
-                  value={scope.createDate}
-                  mode={isIOS ? 'datetime' : 'date'} // 日期时间模式
-                  display={isIOS ? 'spinner' : 'default'} // iOS 推荐用 spinner，Android 用 default (弹窗)
-                  onChange={handleDateChange}
-                />
-              )}
-
-              {showTime && !isIOS && (
-                <DateTimePicker
-                  value={scope.createDate}
-                  mode="time" // Android 上使用 time 模式
-                  display="default"
-                  onChange={handleTimeChange}
-                />
-              )}
+              <DateTimes onDataSend={date => setParams({ ...scope, createDate: date })} />
             </>
           )
         }
@@ -163,32 +133,6 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
     setParams({ ...params, money: cleaned })
   }
 
-  // 处理日期选择变化
-  const handleDateChange = (event: any, selectedDate: any) => {
-    setShowDate(false) // 隐藏日期选择器
-    setShowDate(isIOS) // iOS 上保持显示，Android 上自动隐藏
-    if (event.type === 'set' && selectedDate) {
-      setParams({ ...params, createDate: selectedDate })
-      setShowTime(true) // 显示时间选择器
-    }
-  }
-
-  // 处理时间选择变化
-  const handleTimeChange = (event: any, selectedTime: any) => {
-    setShowTime(false) // 隐藏时间选择器
-    if (event.type === 'set' && selectedTime) {
-      // 合并日期和时间
-      const finalDate = new Date(
-        params.createDate.getFullYear(),
-        params.createDate.getMonth(),
-        params.createDate.getDate(),
-        selectedTime.getHours(),
-        selectedTime.getMinutes()
-      )
-      setParams({ ...params, createDate: finalDate })
-    }
-  }
-
   return (
     <>
       {/* Modal 组件 */}
@@ -222,7 +166,7 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
                       style={styles.input}
                       placeholder={column.placeholder || `在此输入${column.label}`}
                       placeholderTextColor="#999"
-                      value={params[column.prop] || ''}
+                      value={params[column.prop]}
                       onChangeText={
                         column.handle ||
                         ((val: string) => setParams({ ...params, [column.prop]: val }))
