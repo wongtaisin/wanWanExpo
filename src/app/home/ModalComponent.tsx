@@ -7,7 +7,7 @@ import DateTimes from './components/DateTime'
 interface ModalComponentProps {
   visible: boolean
   onClose: () => void
-  title: string
+  title?: string
 }
 
 interface FormData {
@@ -86,13 +86,9 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
       prop: 'createDate',
       placeholder: '请选择创建时间',
       slot: {
-        render: (scope: FormData) => {
-          return (
-            <>
-              <DateTimes onDataSend={date => setParams({ ...scope, createDate: date })} />
-            </>
-          )
-        }
+        render: (scope: FormData) => (
+          <DateTimes onDataSend={date => setParams({ ...scope, createDate: date })} />
+        )
       }
     }
   ]
