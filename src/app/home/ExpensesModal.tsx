@@ -154,7 +154,7 @@ const ExpensesModal = ({ visible, onClose, title }: ExpensesModalProps) => {
                     column.slot.render(params)
                   ) : (
                     <TextInput
-                      className="w-9/12 border border-gray-300 rounded-md px-2"
+                      className="w-9/12 h-11 border border-gray-300 rounded-md px-2"
                       placeholder={column.placeholder || `在此输入${column.label}`}
                       placeholderTextColor="#999"
                       value={params[column.prop]}
