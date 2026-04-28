@@ -1,8 +1,8 @@
-import { Picker } from '@react-native-picker/picker'
 import { useState } from 'react'
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import _util from '../../utils/utils'
 import DateTimes from './components/DateTime'
+import CustomSelect from '@/app/home/components/CustomSelect'
 
 interface ModalComponentProps {
   visible: boolean
@@ -45,17 +45,12 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
       slot: {
         render: (scope: FormData) => {
           return (
-            <View className="w-9/12 border border-gray-300 rounded-md">
-              <Picker
-                selectedValue={scope.paymentId}
-                onValueChange={val => handlePaymentSelect(val as number)}
-                itemStyle={{ color: '#000', fontSize: 14 }}
-              >
-                {paymentOptions.map(item => (
-                  <Picker.Item key={item.id} label={item.name} value={item.id} />
-                ))}
-              </Picker>
-            </View>
+            <CustomSelect
+              options={paymentOptions}
+              selectedValue={scope.paymentId}
+              onValueChange={handlePaymentSelect}
+              placeholder="请选择支付类型"
+            />
           )
         }
       }
