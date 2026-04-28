@@ -159,7 +159,7 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
                     column.slot.render(params)
                   ) : (
                     <TextInput
-                      style={styles.input}
+                      className="w-9/12 border border-gray-300 rounded-md px-2"
                       placeholder={column.placeholder || `在此输入${column.label}`}
                       placeholderTextColor="#999"
                       value={params[column.prop]}
@@ -189,7 +189,6 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
 }
 
 const styles = StyleSheet.create({
-  // 3. 弹窗实体内容
   modalView: {
     width: '85%',
     margin: 20,
@@ -202,14 +201,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5 // Android 阴影
-  },
-  input: {
-    width: '75%',
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10 // 内边距，增加输入体验
   }
 })
 
