@@ -1,10 +1,10 @@
+import CommonDateTime from '@/components/CommonDateTime'
+import CommonSelect from '@/components/CommonSelect'
 import { useState } from 'react'
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import _util from '../../utils/utils'
-import DateTimes from './components/DateTime'
-import CustomSelect from '@/app/home/components/CustomSelect'
 
-interface ModalComponentProps {
+interface ExpensesModalProps {
   visible: boolean
   onClose: () => void
   title?: string
@@ -20,7 +20,7 @@ interface FormData {
   [key: string]: string | number | Record<string, any>[] | undefined | null | any
 }
 
-const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
+const ExpensesModal = ({ visible, onClose, title }: ExpensesModalProps) => {
   const [params, setParams] = useState<FormData>({
     expensesName: '', // 支出名称
     money: '', // 金额
@@ -45,7 +45,7 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
       slot: {
         render: (scope: FormData) => {
           return (
-            <CustomSelect
+            <CommonSelect
               options={paymentOptions}
               selectedValue={scope.paymentId}
               onValueChange={handlePaymentSelect}
@@ -82,7 +82,7 @@ const MyModal = ({ visible, onClose, title }: ModalComponentProps) => {
       placeholder: '请选择创建时间',
       slot: {
         render: (scope: FormData) => (
-          <DateTimes onDataSend={date => setParams({ ...scope, createDate: date })} />
+          <CommonDateTime onDataSend={date => setParams({ ...scope, createDate: date })} />
         )
       }
     }
@@ -199,4 +199,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default MyModal
+export default ExpensesModal

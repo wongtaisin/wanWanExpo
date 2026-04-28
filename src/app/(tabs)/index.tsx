@@ -1,4 +1,4 @@
-import ModalComponent from '@/app/home/ModalComponent'
+import ExpensesPopup from '@/app/home/ExpensesModal'
 import IconFont from '@/components/IconFont'
 import { useState } from 'react'
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
@@ -62,7 +62,7 @@ const Home = () => {
       </View>
 
       {/* 弹窗组件 */}
-      <ModalComponent visible={modalVisible} onClose={() => setModalVisible(false)} />
+      <ExpensesPopup visible={modalVisible} onClose={() => setModalVisible(false)} />
     </>
   )
 }
