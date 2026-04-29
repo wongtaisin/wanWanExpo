@@ -1,4 +1,6 @@
 import { FlatList, Text, View } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
 
 // 模拟数据类型
 interface ExpenseItem {
@@ -111,6 +113,19 @@ export default function TabExpenseScreen() {
   const totalCount = mockData.reduce((sum, group) => sum + group.items.length, 0)
   const totalAmount = mockData.reduce((sum, group) => sum + group.total, 0)
 
+  const renderRightActions = () => {
+    return (
+      <>
+        <View className="bg-[#007aff] py-5 px-5 justify-center">
+          <Text className="text-white">修改</Text>
+        </View>
+        <View className="bg-[red] py-5 px-5 justify-center">
+          <Text className="text-white">删除</Text>
+        </View>
+      </>
+    )
+  }
+
   const renderItem = ({ item }: { item: GroupedExpense }) => (
     <View className="bg-white">
       {/* 日期头部 */}
@@ -121,18 +136,21 @@ export default function TabExpenseScreen() {
 
       {/* 该日期下的所有记录 */}
       {item.items.map((expense, index) => (
-        <View
-          key={index}
-          style={{ borderBottomWidth: 1 }}
-          className="flex-row justify-between items-center px-4 py-4 border-b-[#f9f9f9]"
-        >
-          <View className="flex-1 mr-4">
-            {expense.title && <Text className="text-sm text-[#3b4144] mb-1">{expense.title}</Text>}
-            {expense.description && <Text className="text-base mb-1">{expense.description}</Text>}
-            <Text className="text-[#999] text-xs">{expense.time}</Text>
+        <ReanimatedSwipeable renderRightActions={renderRightActions} key={index}>
+          <View
+            style={{ borderBottomWidth: 1 }}
+            className="flex-row justify-between items-center px-4 py-4 border-b-[#f9f9f9]"
+          >
+            <View className="flex-1 mr-4">
+              {expense.title && (
+                <Text className="text-sm text-[#3b4144] mb-1">{expense.title}</Text>
+              )}
+              {expense.description && <Text className="text-base mb-1">{expense.description}</Text>}
+              <Text className="text-[#999] text-xs">{expense.time}</Text>
+            </View>
+            <Text className="text-base">{expense.amount}</Text>
           </View>
-          <Text className="text-base">{expense.amount}</Text>
-        </View>
+        </ReanimatedSwipeable>
       ))}
     </View>
   )
@@ -161,12 +179,14 @@ export default function TabExpenseScreen() {
       </View>
 
       {/* 流水列表 */}
-      <FlatList
-        data={mockData}
-        renderItem={renderItem}
-        keyExtractor={item => item.date}
-        contentContainerStyle={{ paddingBottom: 16 }}
-      />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <FlatList
+          data={mockData}
+          renderItem={renderItem}
+          keyExtractor={item => item.date}
+          contentContainerStyle={{ paddingBottom: 16 }}
+        />
+      </GestureHandlerRootView>
     </>
   )
 }
