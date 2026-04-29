@@ -1,10 +1,11 @@
-import { FlatList, Text, View } from 'react-native'
+import { useRef } from 'react'
+import { Alert, FlatList, Text, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
 
 // 模拟数据类型
 interface ExpenseItem {
-  id: string
+  id: number
   date: string
   title?: string
   description?: string
@@ -25,7 +26,7 @@ const mockData: GroupedExpense[] = [
     total: 6,
     items: [
       {
-        id: '1',
+        id: 1,
         date: '2026-04-28',
         title: '炒米粉3，肉包1.5*2=3',
         time: '2026-04-28 07:44:31',
@@ -38,7 +39,7 @@ const mockData: GroupedExpense[] = [
     total: 21,
     items: [
       {
-        id: '2',
+        id: 2,
         date: '2026-04-27',
         title: '郑记汤粉猪脚饭东莞烧鹅',
         description: '汤饭',
@@ -46,7 +47,7 @@ const mockData: GroupedExpense[] = [
         amount: -15
       },
       {
-        id: '3',
+        id: 3,
         date: '2026-04-27',
         title: '炒面，肠粉，面太咸了，这家也不好吃',
         time: '2026-04-27 07:45:43',
@@ -59,7 +60,7 @@ const mockData: GroupedExpense[] = [
     total: 6.5,
     items: [
       {
-        id: '4',
+        id: 4,
         date: '2026-04-24',
         title: '美佳亲便利店',
         description:
@@ -68,21 +69,21 @@ const mockData: GroupedExpense[] = [
         amount: -3.5
       },
       {
-        id: '5',
+        id: 5,
         date: '2026-04-24',
         description: '蒸河粉',
         time: '2026-04-24 08:47:27',
         amount: -3
       },
       {
-        id: '6',
+        id: 6,
         date: '2026-04-24',
         description: '蒸河粉6',
         time: '2026-04-24 09:47:27',
         amount: -3
       },
       {
-        id: '7',
+        id: 7,
         date: '2026-04-24',
         description: '蒸河粉7',
         time: '2026-04-24 10:47:27',
@@ -95,7 +96,7 @@ const mockData: GroupedExpense[] = [
     total: 3.5,
     items: [
       {
-        id: '8',
+        id: 8,
         date: '2026-04-23',
         title: '美佳亲便利店',
         description: '王老吉',
@@ -113,18 +114,42 @@ export default function TabExpenseScreen() {
   const totalCount = mockData.reduce((sum, group) => sum + group.items.length, 0)
   const totalAmount = mockData.reduce((sum, group) => sum + group.total, 0)
 
-  const renderRightActions = () => {
-    return (
-      <>
-        <View className="bg-[#007aff] py-5 px-5 justify-center">
-          <Text className="text-white">修改</Text>
-        </View>
-        <View className="bg-[red] py-5 px-5 justify-center">
-          <Text className="text-white">删除</Text>
-        </View>
-      </>
-    )
+  const swipeableRefs = useRef<any[]>([])
+
+  // 关闭其它打开项（微信效果）
+  const closeOthers = (currentId: number) => {
+    swipeableRefs.current.forEach((ref, id) => {
+      if (id !== currentId) {
+        ref.close()
+      }
+    })
   }
+
+  const handleEdit = (item: any) => {
+    console.log(item)
+  }
+
+  const handleDelete = (id: string) => {
+    Alert.alert('删除:', '确认删除该记录吗？', [
+      { text: '取消', style: 'cancel' },
+      { text: '确认', onPress: () => console.log('删除:', id) }
+    ])
+  }
+
+  const renderRightActions = (item: any) => (
+    <>
+      <View className="bg-[#007aff] py-5 px-5 justify-center">
+        <Text className="text-white" onPress={() => handleEdit(item)}>
+          修改
+        </Text>
+      </View>
+      <View className="bg-[red] py-5 px-5 justify-center">
+        <Text className="text-white" onPress={() => handleDelete(item.id)}>
+          删除
+        </Text>
+      </View>
+    </>
+  )
 
   const renderItem = ({ item }: { item: GroupedExpense }) => (
     <View className="bg-white">
@@ -135,8 +160,14 @@ export default function TabExpenseScreen() {
       </View>
 
       {/* 该日期下的所有记录 */}
-      {item.items.map((expense, index) => (
-        <ReanimatedSwipeable renderRightActions={renderRightActions} key={index}>
+      {item.items.map(expense => (
+        <ReanimatedSwipeable
+          // @ts-ignore - ReanimatedSwipeable 支持回调 ref，但类型定义不完整
+          ref={(ref: any) => (swipeableRefs.current[expense.id] = ref)}
+          onSwipeableWillOpen={() => closeOthers(expense.id)}
+          renderRightActions={() => renderRightActions(expense)}
+          key={expense.id}
+        >
           <View
             style={{ borderBottomWidth: 1 }}
             className="flex-row justify-between items-center px-4 py-4 border-b-[#f9f9f9]"
