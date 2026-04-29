@@ -2,7 +2,7 @@
  * @Author: wingddd wongtaisin1024@gmail.com
  * @Date: 2026-04-17 10:07:04
  * @LastEditors: wingddd wongtaisin1024@gmail.com
- * @LastEditTime: 2026-04-22 08:13:56
+ * @LastEditTime: 2026-04-29 08:18:52
  * @FilePath: \wanWanExpo\src\app\(tabs)\_layout.tsx
  * @Description:
  *
@@ -37,7 +37,8 @@ export default function TabLayout() {
         headerShown: useClientOnlyValue(true, true), // 在web端禁用静态渲染头部
         // 设置头部样式
         headerStyle: {
-          backgroundColor: '#fede2b'
+          backgroundColor: '#fede2b',
+          borderBottomColor: '#fede2b'
         },
         headerTintColor: '#000', // 设置头部文字颜色
         // 设置底部标签栏样式

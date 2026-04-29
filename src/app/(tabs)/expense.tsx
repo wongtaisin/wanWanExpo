@@ -1,10 +1,10 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Text, View } from 'react-native'
 
 // 模拟数据类型
 interface ExpenseItem {
   id: string
   date: string
-  title: string
+  title?: string
   description?: string
   time: string
   amount: number
@@ -68,8 +68,22 @@ const mockData: GroupedExpense[] = [
       {
         id: '5',
         date: '2026-04-24',
-        title: '蒸河粉',
+        description: '蒸河粉',
         time: '2026-04-24 08:47:27',
+        amount: -3
+      },
+      {
+        id: '6',
+        date: '2026-04-24',
+        description: '蒸河粉6',
+        time: '2026-04-24 09:47:27',
+        amount: -3
+      },
+      {
+        id: '7',
+        date: '2026-04-24',
+        description: '蒸河粉7',
+        time: '2026-04-24 10:47:27',
         amount: -3
       }
     ]
@@ -79,7 +93,7 @@ const mockData: GroupedExpense[] = [
     total: 3.5,
     items: [
       {
-        id: '6',
+        id: '8',
         date: '2026-04-23',
         title: '美佳亲便利店',
         description: '王老吉',
@@ -100,16 +114,20 @@ export default function TabExpenseScreen() {
   const renderItem = ({ item }: { item: GroupedExpense }) => (
     <View className="bg-white">
       {/* 日期头部 */}
-      <View style={styles.dateHeader}>
-        <Text className="text-[#999] text-sm">📅 {item.date}</Text>
-        <Text className="text-[#999] text-sm">支出: {item.total}</Text>
+      <View className="flex-row justify-between items-center px-4 py-3 bg-[#f9f9f9]">
+        <Text className="text-[#a0a0a0] text-xs">📅 {item.date}</Text>
+        <Text className="text-[#a0a0a0] text-xs">支出: {item.total}</Text>
       </View>
 
       {/* 该日期下的所有记录 */}
-      {item.items.map(expense => (
-        <View key={expense.id} style={styles.expenseItem}>
+      {item.items.map((expense, index) => (
+        <View
+          key={index}
+          style={{ borderBottomWidth: 1 }}
+          className="flex-row justify-between items-center px-4 py-4 border-b-[#f9f9f9]"
+        >
           <View className="flex-1 mr-4">
-            <Text className="text-sm text-[#3b4144] mb-1">{expense.title}</Text>
+            {expense.title && <Text className="text-sm text-[#3b4144] mb-1">{expense.title}</Text>}
             {expense.description && <Text className="text-base mb-1">{expense.description}</Text>}
             <Text className="text-[#999] text-xs">{expense.time}</Text>
           </View>
@@ -120,7 +138,7 @@ export default function TabExpenseScreen() {
   )
 
   return (
-    <View className="flex-1 bg-gray-100">
+    <>
       {/* 黄色顶部统计区域 */}
       <View className="bg-[#fede2b] py-5 px-4">
         <View className="flex-row justify-around items-start">
@@ -128,7 +146,7 @@ export default function TabExpenseScreen() {
             <Text className="text-[#7c7b7b] text-sm mb-2">{year}年</Text>
             <Text className="text-2xl">
               {month}
-              <Text style={{ fontSize: 12, marginLeft: 10 }}>月</Text>
+              <Text className="text-xs ml-3">月</Text>
             </Text>
           </View>
           <View className="items-center">
@@ -147,31 +165,8 @@ export default function TabExpenseScreen() {
         data={mockData}
         renderItem={renderItem}
         keyExtractor={item => item.date}
-        className="flex-1"
         contentContainerStyle={{ paddingBottom: 16 }}
       />
-    </View>
+    </>
   )
 }
-
-const styles = StyleSheet.create({
-  dateHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#f9f9f9',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee'
-  },
-  expenseItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f5f5f5'
-  }
-})
