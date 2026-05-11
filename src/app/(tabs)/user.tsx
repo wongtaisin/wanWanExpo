@@ -2,7 +2,7 @@
  * @Author: wingddd wongtaisin1024@gmail.com
  * @Date: 2026-04-17 10:56:19
  * @LastEditors: wingddd wongtaisin1024@gmail.com
- * @LastEditTime: 2026-04-29 14:16:33
+ * @LastEditTime: 2026-05-11 15:57:03
  * @FilePath: \wanWanExpo\src\app\(tabs)\user.tsx
  * @Description:
  *
@@ -10,6 +10,7 @@
  */
 import { Text, View } from '@/components/Themed'
 import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import {
   Image,
   Text as NativeText,
@@ -20,6 +21,7 @@ import {
 } from 'react-native'
 
 export default function TabUserScreen() {
+  const router = useRouter()
   return (
     <ScrollView className="flex-1 bg-[#f5f5f5]">
       {/* 顶部黄色区域 */}
@@ -43,7 +45,10 @@ export default function TabUserScreen() {
       <View style={styles.menuCard}>
         <View className="flex-row justify-around bg-transparent">
           {/* 店铺 */}
-          <TouchableOpacity className="flex-1 items-center">
+          <TouchableOpacity
+            className="flex-1 items-center"
+            onPress={() => router.push('/user/shop')}
+          >
             <View className="w-[60] justify-center items-center relative bg-transparent">
               <Ionicons name="storefront-outline" size={32} color="#666" />
             </View>
@@ -62,7 +67,7 @@ export default function TabUserScreen() {
           <TouchableOpacity className="flex-1 items-center">
             <View className="w-[60] justify-center items-center relative bg-transparent">
               <Ionicons name="lock-closed-outline" size={32} color="#666" />
-              <NativeView className="absolute top-0 right-0 bg-[#ff4444] rounded-[10] min-w-[10] h-2.5 justify-center items-center px-1">
+              <NativeView className="absolute top-0 right-0 bg-[#ff4444] rounded-[10] min-w-[10] h-4 justify-center items-center px-1">
                 <NativeText className="color-white text-xs font-bold">3</NativeText>
               </NativeView>
             </View>

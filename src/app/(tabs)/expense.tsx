@@ -7,6 +7,7 @@ import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeabl
 // 模拟数据类型
 interface ExpenseItem {
   id: number
+  expensesName: string
   paymentId: number
   shopName?: string
   remark?: string
@@ -27,6 +28,7 @@ const mockData: GroupedExpense[] = [
     total: 6,
     items: [
       {
+        expensesName: 'eat',
         paymentId: 1,
         id: 1,
         remark: '炒米粉3，肉包1.5*2=3',
@@ -40,6 +42,7 @@ const mockData: GroupedExpense[] = [
     total: 21,
     items: [
       {
+        expensesName: 'eat',
         paymentId: 2,
         id: 2,
         shopName: '郑记汤粉猪脚饭东莞烧鹅',
@@ -48,6 +51,7 @@ const mockData: GroupedExpense[] = [
         money: '15'
       },
       {
+        expensesName: 'eat',
         paymentId: 1,
         id: 3,
         remark: '炒面，肠粉，面太咸了，这家也不好吃',
@@ -61,6 +65,7 @@ const mockData: GroupedExpense[] = [
     total: 6.5,
     items: [
       {
+        expensesName: 'drink',
         paymentId: 2,
         id: 4,
         shopName: '美佳亲便利店',
@@ -70,6 +75,7 @@ const mockData: GroupedExpense[] = [
         money: '3.5'
       },
       {
+        expensesName: 'eat',
         paymentId: 2,
         id: 5,
         remark: '蒸河粉',
@@ -77,6 +83,7 @@ const mockData: GroupedExpense[] = [
         money: '3'
       },
       {
+        expensesName: 'eat',
         paymentId: 2,
         id: 6,
         remark: '蒸河粉6',
@@ -84,6 +91,7 @@ const mockData: GroupedExpense[] = [
         money: '3'
       },
       {
+        expensesName: 'eat',
         paymentId: 2,
         id: 7,
         remark: '蒸河粉7',
@@ -97,6 +105,7 @@ const mockData: GroupedExpense[] = [
     total: 3.5,
     items: [
       {
+        expensesName: 'drink',
         paymentId: 2,
         id: 8,
         shopName: '美佳亲便利店',
