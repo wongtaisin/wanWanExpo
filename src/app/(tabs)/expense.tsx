@@ -1,4 +1,5 @@
-import { useRef } from 'react'
+import ExpensesPopup from '@/app/home/ExpensesModal'
+import { useRef, useState } from 'react'
 import { Alert, FlatList, Text, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
@@ -6,11 +7,11 @@ import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeabl
 // 模拟数据类型
 interface ExpenseItem {
   id: number
-  date: string
-  title?: string
-  description?: string
-  time: string
-  amount: number
+  paymentId: number
+  shopName?: string
+  remark?: string
+  createDate: string
+  money: string
 }
 
 interface GroupedExpense {
@@ -26,11 +27,11 @@ const mockData: GroupedExpense[] = [
     total: 6,
     items: [
       {
+        paymentId: 1,
         id: 1,
-        date: '2026-04-28',
-        title: '炒米粉3，肉包1.5*2=3',
-        time: '2026-04-28 07:44:31',
-        amount: -6
+        remark: '炒米粉3，肉包1.5*2=3',
+        createDate: '2026-04-28 07:44',
+        money: '6'
       }
     ]
   },
@@ -39,19 +40,19 @@ const mockData: GroupedExpense[] = [
     total: 21,
     items: [
       {
+        paymentId: 2,
         id: 2,
-        date: '2026-04-27',
-        title: '郑记汤粉猪脚饭东莞烧鹅',
-        description: '汤饭',
-        time: '2026-04-27 12:12:27',
-        amount: -15
+        shopName: '郑记汤粉猪脚饭东莞烧鹅',
+        remark: '汤饭',
+        createDate: '2026-04-27 12:12:27',
+        money: '15'
       },
       {
+        paymentId: 1,
         id: 3,
-        date: '2026-04-27',
-        title: '炒面，肠粉，面太咸了，这家也不好吃',
-        time: '2026-04-27 07:45:43',
-        amount: -6
+        remark: '炒面，肠粉，面太咸了，这家也不好吃',
+        createDate: '2026-04-27 07:45:43',
+        money: '6'
       }
     ]
   },
@@ -60,34 +61,34 @@ const mockData: GroupedExpense[] = [
     total: 6.5,
     items: [
       {
+        paymentId: 2,
         id: 4,
-        date: '2026-04-24',
-        title: '美佳亲便利店',
-        description:
+        shopName: '美佳亲便利店',
+        remark:
           '王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉王老吉',
-        time: '2026-04-24 12:28:07',
-        amount: -3.5
+        createDate: '2026-04-24 12:28:07',
+        money: '3.5'
       },
       {
+        paymentId: 2,
         id: 5,
-        date: '2026-04-24',
-        description: '蒸河粉',
-        time: '2026-04-24 08:47:27',
-        amount: -3
+        remark: '蒸河粉',
+        createDate: '2026-04-24 08:47:27',
+        money: '3'
       },
       {
+        paymentId: 2,
         id: 6,
-        date: '2026-04-24',
-        description: '蒸河粉6',
-        time: '2026-04-24 09:47:27',
-        amount: -3
+        remark: '蒸河粉6',
+        createDate: '2026-04-24 09:47:27',
+        money: '3'
       },
       {
+        paymentId: 2,
         id: 7,
-        date: '2026-04-24',
-        description: '蒸河粉7',
-        time: '2026-04-24 10:47:27',
-        amount: -3
+        remark: '蒸河粉7',
+        createDate: '2026-04-24 10:47:27',
+        money: '3'
       }
     ]
   },
@@ -96,18 +97,28 @@ const mockData: GroupedExpense[] = [
     total: 3.5,
     items: [
       {
+        paymentId: 2,
         id: 8,
-        date: '2026-04-23',
-        title: '美佳亲便利店',
-        description: '王老吉',
-        time: '2026-04-23 12:32:31',
-        amount: -3.5
+        shopName: '美佳亲便利店',
+        remark: '王老吉',
+        createDate: '2026-04-23 12:32:31',
+        money: '3'
       }
     ]
   }
 ]
 
-export default function TabExpenseScreen() {
+const TabExpenseScreen = () => {
+  const [params, setParams] = useState<any>({
+    expensesName: '', // 支出名称
+    money: '', // 金额
+    paymentId: 2, // 默认微信
+    paymentName: '', // 支付类型
+    shopName: '', // 店铺名称
+    remark: '', // 创建日期
+    createDate: '' // 格式化默认日期为 YYYY-MM-DD HH:mm
+  })
+
   // 计算统计数据
   const year = '2026'
   const month = '4'
@@ -115,6 +126,7 @@ export default function TabExpenseScreen() {
   const totalAmount = mockData.reduce((sum, group) => sum + group.total, 0)
 
   const swipeableRefs = useRef<any[]>([])
+  const [modalVisible, setModalVisible] = useState(false)
 
   // 关闭其它打开项（微信效果）
   const closeOthers = (currentId: number) => {
@@ -126,7 +138,8 @@ export default function TabExpenseScreen() {
   }
 
   const handleEdit = (item: any) => {
-    console.log(item)
+    setModalVisible(true)
+    setParams(item)
   }
 
   const handleDelete = (id: string) => {
@@ -173,13 +186,13 @@ export default function TabExpenseScreen() {
             className="flex-row justify-between items-center px-4 py-4 border-b-[#f9f9f9]"
           >
             <View className="flex-1 mr-4">
-              {expense.title && (
-                <Text className="text-sm text-[#3b4144] mb-1">{expense.title}</Text>
+              {expense.shopName && (
+                <Text className="text-sm text-[#3b4144] mb-1">{expense.shopName}</Text>
               )}
-              {expense.description && <Text className="text-base mb-1">{expense.description}</Text>}
-              <Text className="text-[#999] text-xs">{expense.time}</Text>
+              {expense.remark && <Text className="text-base mb-1">{expense.remark}</Text>}
+              <Text className="text-[#999] text-xs">{expense.createDate}</Text>
             </View>
-            <Text className="text-base">{expense.amount}</Text>
+            <Text className="text-base">{expense.money}</Text>
           </View>
         </ReanimatedSwipeable>
       ))}
@@ -218,6 +231,16 @@ export default function TabExpenseScreen() {
           contentContainerStyle={{ paddingBottom: 16 }}
         />
       </GestureHandlerRootView>
+
+      {/* 弹窗组件 */}
+      <ExpensesPopup
+        title="修改记录"
+        visible={modalVisible}
+        value={params}
+        onClose={() => setModalVisible(false)}
+      />
     </>
   )
 }
+
+export default TabExpenseScreen

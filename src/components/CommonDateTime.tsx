@@ -27,7 +27,7 @@ const DateTime = ({ onDataSend }: DateTimeProps) => {
   // 处理日期选择变化
   const handleDateChange = (event: any, selectedDate: any) => {
     setShowDate(false) // 隐藏日期选择器
-    setShowDate(isIOS) // iOS 上保持显示，Android 上自动隐藏
+    setShowTime(isIOS) // iOS 上保持显示，Android 上自动隐藏
     if (event.type === 'set' && selectedDate) {
       setCreateDate(selectedDate)
       setShowTime(true) // 显示时间选择器

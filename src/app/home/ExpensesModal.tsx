@@ -1,6 +1,6 @@
 import CommonDateTime from '@/components/CommonDateTime'
 import CommonSelect from '@/components/CommonSelect'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import _util from '../../utils/utils'
 
@@ -8,6 +8,7 @@ interface ExpensesModalProps {
   visible: boolean
   onClose: () => void
   title?: string
+  value?: FormData
 }
 
 interface FormData {
@@ -20,16 +21,31 @@ interface FormData {
   [key: string]: string | number | Record<string, any>[] | undefined | null | any
 }
 
-const ExpensesModal = ({ visible, onClose, title }: ExpensesModalProps) => {
-  const [params, setParams] = useState<FormData>({
-    expensesName: '', // 支出名称
-    money: '', // 金额
-    paymentId: 2, // 默认微信
-    paymentName: '', // 支付类型
-    shopName: '', // 店铺名称
-    remark: '', // 创建日期
-    createDate: _util.formatDateTime(new Date(), true) // 格式化默认日期为 YYYY-MM-DD HH:mm
-  })
+const ExpensesModal = (props: ExpensesModalProps) => {
+  const { visible, onClose, title, value } = props
+  const [params, setParams] = useState<FormData>(
+    value || {
+      expensesName: '', // 支出名称
+      money: '', // 金额
+      paymentId: 2, // 默认微信
+      paymentName: '', // 支付类型
+      shopName: '', // 店铺名称
+      remark: '', // 创建日期
+      createDate: _util.formatDateTime(new Date(), true) // 格式化默认日期为 YYYY-MM-DD HH:mm
+    }
+  )
+
+  // 监听 value 变化，同步更新 params，等同 vue3 watch
+  useEffect(() => {
+    if (value) {
+      console.log(value, `value`)
+      const normalizedValue: FormData = {
+        ...value,
+        money: String(value.money || '') // 确保 money 是字符串格式
+      }
+      setParams(normalizedValue) // 更新 params 为字符串格式，一次渲染
+    }
+  }, [value])
 
   const formColumns = [
     { label: '支付类型', prop: 'expensesName' },
