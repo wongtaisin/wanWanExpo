@@ -177,7 +177,7 @@ const TabExpenseScreen = () => {
     <View className="bg-white">
       {/* 日期头部 */}
       <View className="flex-row justify-between items-center px-4 py-3 bg-[#f9f9f9]">
-        <Text className="text-[#a0a0a0] text-xs">📅 {item.date}</Text>
+        <Text className="text-[#a0a0a0] text-xs">{item.date}</Text>
         <Text className="text-[#a0a0a0] text-xs">支出: {item.total}</Text>
       </View>
 
