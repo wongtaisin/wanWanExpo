@@ -187,6 +187,15 @@ const TabExpenseScreen = () => {
           // @ts-ignore - ReanimatedSwipeable 支持回调 ref，但类型定义不完整
           ref={(ref: any) => (swipeableRefs.current[expense.id] = ref)}
           onSwipeableWillOpen={() => closeOthers(expense.id)}
+          friction={1.5} // 调整滑动摩擦系数，值越大滑动越慢
+          overshootRight={false} // 禁止右滑回弹
+          overshootFriction={8} // 调整回弹效果的阻尼系数
+          rightThreshold={48} // 调整右滑距离阈值
+          animationOptions={{
+            damping: 24, // 调整阻尼系数，值越大回弹越快
+            stiffness: 520, // 调整刚度系数，值越大回弹越快
+            mass: 0.8 // 调整质量，值越大回弹越快
+          }}
           renderRightActions={() => renderRightActions(expense)}
           key={expense.id}
         >
