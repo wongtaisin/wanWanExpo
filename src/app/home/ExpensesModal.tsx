@@ -67,7 +67,7 @@ const ExpensesModal = (props: ExpensesModalProps) => {
               style={{ height: 40, overflow: 'hidden' }}
             >
               <Picker
-                style={{ height: 54, marginTop: -8 }} // 调整 Picker 的高度和位置
+                style={{ height: 52, marginTop: -8 }} // 调整 Picker 的高度和位置，使其在容器中居中显示
                 selectedValue={scope.paymentId}
                 onValueChange={(val: number) => handlePaymentSelect(val)}
                 itemStyle={{ color: '#000', fontSize: 14 }}
