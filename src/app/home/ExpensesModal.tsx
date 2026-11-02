@@ -1,5 +1,6 @@
 import CommonDateTime from '@/components/CommonDateTime'
 import CommonSelect from '@/components/CommonSelect'
+import { Picker } from '@react-native-picker/picker'
 import { useEffect, useState } from 'react'
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import _util from '../../utils/utils'
@@ -53,6 +54,32 @@ const ExpensesModal = (props: ExpensesModalProps) => {
       label: '金额',
       prop: 'money',
       handle: (val: string) => handleMoneyChange(val)
+    },
+    {
+      label: '支付类型',
+      prop: 'paymentName',
+      placeholder: '请选择支付类型',
+      slot: {
+        render: (scope: FormData) => {
+          return (
+            <View
+              className="w-9/12 border border-gray-300 rounded-md"
+              style={{ height: 40, overflow: 'hidden' }}
+            >
+              <Picker
+                style={{ height: 54, marginTop: -8 }} // 调整 Picker 的高度和位置
+                selectedValue={scope.paymentId}
+                onValueChange={(val: number) => handlePaymentSelect(val)}
+                itemStyle={{ color: '#000', fontSize: 14 }}
+              >
+                {paymentOptions.map(item => (
+                  <Picker.Item key={item.id} label={item.name} value={item.id} />
+                ))}
+              </Picker>
+            </View>
+          )
+        }
+      }
     },
     {
       label: '支付类型',
